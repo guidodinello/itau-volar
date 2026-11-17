@@ -1,4 +1,4 @@
-# itau-volar
+# itau-volar-cli
 
 Personal CLI to browse and compare what Itaú Volar miles can buy. It reads two public sites,
 without login, and keeps a local SQLite history so price drops and new products show up.
