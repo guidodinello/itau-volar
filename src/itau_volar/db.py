@@ -3,8 +3,6 @@
 Observations are what make price drops, new products and restocks visible.
 """
 
-from __future__ import annotations
-
 import os
 import sqlite3
 import unicodedata

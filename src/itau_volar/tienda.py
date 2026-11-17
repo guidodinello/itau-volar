@@ -4,8 +4,6 @@ The site is server-rendered (GeneXus). Every page carries its state as JSON in a
 hidden `GXState` input, so we read that instead of scraping the visible HTML.
 """
 
-from __future__ import annotations
-
 import html
 import json
 import re

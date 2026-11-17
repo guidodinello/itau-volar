@@ -1,7 +1,5 @@
 """`volar` command line: sync both catalogs into SQLite and query them."""
 
-from __future__ import annotations
-
 import argparse
 import dataclasses
 import json
