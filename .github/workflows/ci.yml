@@ -82,7 +82,7 @@ jobs:
           # Must match the language_version in .pre-commit-config.yaml: without
           # it uv builds the venv on the newest Python requires-python allows,
           # and pre-commit can't find the python3.X a hook asks for.
-          python-version: "3.12"
+          python-version: "3.15"
 
       - name: Install dependencies
         run: uv sync --locked --dev

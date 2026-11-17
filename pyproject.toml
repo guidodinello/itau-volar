@@ -3,7 +3,7 @@ name = "itau-volar"
 version = "0.1.0"
 description = "Personal CLI to browse and compare Itaú Volar and Tienda Volar products"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.15"
 dependencies = []
 
 [project.scripts]
@@ -27,6 +27,7 @@ dev = [
 testpaths = ["tests"]
 
 [tool.ruff]
+target-version = "py315"
 line-length = 100
 
 [tool.ruff.lint]

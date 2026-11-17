@@ -1,7 +1,5 @@
 """One polite, sequential HTTP client shared by both sites."""
 
-from __future__ import annotations
-
 import json
 import time
 import urllib.request

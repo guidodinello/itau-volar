@@ -3,8 +3,6 @@
 The web app talks to a JSON API that answers without login.
 """
 
-from __future__ import annotations
-
 import json
 from collections.abc import Callable
 from dataclasses import dataclass
