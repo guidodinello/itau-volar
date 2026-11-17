@@ -3,18 +3,19 @@
 import argparse
 import dataclasses
 import json
-import logging
 import sqlite3
 import sys
 import urllib.error
 from collections.abc import Iterable, Sequence
 from http import HTTPStatus
 
+from logger import get_logger, init_logging
+
 from . import tienda, volar
 from .db import CHANGES_SQL, Product, Source, connect, db_path, fold, last_two_runs, record_run
 from .http import DEFAULT_DELAY_SECONDS, Client
 
-logger = logging.getLogger("volar")
+log = get_logger("volar")
 
 _MAX_CELL_WIDTH = 70
 
@@ -35,23 +36,24 @@ _JSON_COLUMNS = (
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
-    logging.basicConfig(level=logging.INFO, format="%(message)s", stream=sys.stderr)
+    # stderr: stdout carries the results (tables, --json) and must stay clean.
+    init_logging(stream=sys.stderr)
     try:
         return args.run(args)
     except tienda.BlockedError as error:
-        logger.error("blocked: %s. %s", error, _BLOCKED_HINT)
+        log.error("blocked: %s. %s", error, _BLOCKED_HINT)
         return _EXIT_BLOCKED
     except urllib.error.HTTPError as error:
         if error.code in _BLOCKING_STATUSES:
-            logger.error("blocked: HTTP %d. %s", error.code, _BLOCKED_HINT)
+            log.error("blocked: HTTP %d. %s", error.code, _BLOCKED_HINT)
             return _EXIT_BLOCKED
-        logger.error("the site answered HTTP %d for %s", error.code, error.url)
+        log.error("the site answered HTTP %d for %s", error.code, error.url)
     except (urllib.error.URLError, TimeoutError) as error:
-        logger.error("network error: %s", error)
+        log.error("network error: %s", error)
     except tienda.ParseError as error:
-        logger.error("could not read the page: %s", error)
+        log.error("could not read the page: %s", error)
     except sqlite3.Error as error:
-        logger.error("database error: %s", error)
+        log.error("database error: %s", error)
     return _EXIT_ERROR
 
 
@@ -107,16 +109,16 @@ def _sync(args: argparse.Namespace) -> int:
             products = _tienda_products(client, args.category)
         else:
             scope = "catalog"
-            logger.info("volar: downloading the catalog (about 15 seconds)")
+            log.info("volar: downloading the catalog (about 15 seconds)")
             products = _volar_products(client)
         record_run(connection, source, scope, products)
-        logger.info("%s: stored %d products (%s)", source, len(products), scope)
+        log.info("%s: stored %d products (%s)", source, len(products), scope)
     return 0
 
 
 def _tienda_products(client: Client, category: int) -> list[Product]:
     def progress(done: int, total: int) -> None:
-        logger.info("tienda: %d / %d", done, total)
+        log.info("tienda: %d / %d", done, total)
 
     return [
         Product(
@@ -209,10 +211,10 @@ def _changes(args: argparse.Namespace) -> int:
     connection = connect(db_path())
     runs = last_two_runs(connection, args.source)
     if runs is None:
-        logger.error("need two syncs of '%s' with the same scope to compare", args.source)
+        log.error("need two syncs of '%s' with the same scope to compare", args.source)
         return 1
     previous, newest = runs
-    logger.info("%s: %s -> %s", newest["scope"], previous["started_at"], newest["started_at"])
+    log.info("%s: %s -> %s", newest["scope"], previous["started_at"], newest["started_at"])
     rows = connection.execute(
         CHANGES_SQL,
         {"old": previous["run_id"], "new": newest["run_id"], "source": args.source},

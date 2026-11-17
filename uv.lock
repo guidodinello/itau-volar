@@ -57,9 +57,12 @@ wheels = [
 ]
 
 [[package]]
-name = "itau-volar"
+name = "itau-volar-cli"
 version = "0.1.0"
 source = { editable = "." }
+dependencies = [
+    { name = "logger" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -69,6 +72,7 @@ dev = [
 ]
 
 [package.metadata]
+requires-dist = [{ name = "logger", git = "https://github.com/guidodinello/logger?branch=main" }]
 
 [package.metadata.requires-dev]
 dev = [
@@ -76,6 +80,11 @@ dev = [
     { name = "pytest", specifier = ">=8" },
     { name = "ruff", specifier = ">=0.11" },
 ]
+
+[[package]]
+name = "logger"
+version = "0.1.0"
+source = { git = "https://github.com/guidodinello/logger?branch=main#40c706a642edc5102144cf1ae5de187dde2d1c41" }
 
 [[package]]
 name = "nodeenv"

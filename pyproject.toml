@@ -1,10 +1,12 @@
 [project]
-name = "itau-volar"
+name = "itau-volar-cli"
 version = "0.1.0"
 description = "Personal CLI to browse and compare Itaú Volar and Tienda Volar products"
 readme = "README.md"
 requires-python = ">=3.15"
-dependencies = []
+dependencies = [
+    "logger",
+]
 
 [project.scripts]
 volar = "itau_volar.cli:main"
@@ -33,3 +35,8 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 ignore = ["SIM108"]
+
+[tool.uv.sources]
+# Tracks logger's main branch; uv.lock pins the exact commit. Pick up a newer
+# logger with `uv lock --upgrade-package logger`.
+logger = { git = "https://github.com/guidodinello/logger", branch = "main" }
